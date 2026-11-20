@@ -3,7 +3,7 @@
 !.dockerignore
 !Dockerfile
 !compose.yaml
-!compose.caddy.yaml
+!compose.override.yaml
 !requirements.txt
 !README.md
 !site/
