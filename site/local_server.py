@@ -14,6 +14,7 @@ from pathlib import Path
 from uuid import uuid4
 
 from fastapi import FastAPI, File, Form, Header, HTTPException, Request, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from pydantic import BaseModel, Field
 from PIL import Image
@@ -40,11 +41,18 @@ for folder in (DATA, GALLERY, REFS):
     folder.mkdir(parents=True, exist_ok=True)
 
 app = FastAPI(title="Model 1 Studio", docs_url=None, redoc_url=None, openapi_url=None)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://bots-n-bones.github.io"],
+    allow_credentials=False,
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type"],
+)
 
 
 @app.middleware("http")
 async def site_password(request: Request, call_next):
-    if request.url.path in ("/backend.php", "/healthz", "/login"):
+    if request.method == "OPTIONS" or request.url.path in ("/backend.php", "/healthz", "/login"):
         return await call_next(request)
     cookie = request.cookies.get("studio_session", "")
     if not valid_session(cookie) and not valid_basic(request.headers.get("authorization", "")):
