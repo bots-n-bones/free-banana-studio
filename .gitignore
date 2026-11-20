@@ -1,0 +1,13 @@
+*
+!.gitignore
+!.dockerignore
+!Dockerfile
+!compose.yaml
+!compose.caddy.yaml
+!requirements.txt
+!README.md
+!site/
+!site/local_server.py
+!site/index.html
+!site/login.html
+!site/MODEL1_SITE_SPEC.md

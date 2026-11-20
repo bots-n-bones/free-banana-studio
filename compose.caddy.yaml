@@ -1,0 +1,13 @@
+services:
+  studio:
+    networks:
+      - proxy
+    labels:
+      caddy: ${STUDIO_DOMAIN:?Set STUDIO_DOMAIN}
+      caddy_ingress_network: ${STUDIO_PROXY_NETWORK:?Set STUDIO_PROXY_NETWORK}
+      caddy.reverse_proxy: "{{upstreams 8080}}"
+
+networks:
+  proxy:
+    external: true
+    name: ${STUDIO_PROXY_NETWORK:?Set STUDIO_PROXY_NETWORK}
