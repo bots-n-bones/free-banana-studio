@@ -24,6 +24,7 @@ DATA = Path(os.environ.get("STUDIO_DATA_DIR", "/data"))
 GALLERY = DATA / "gallery"
 REFS = DATA / "refs"
 JOBS = DATA / "jobs.json"
+WORKER = DATA / "worker.json"
 KEY = os.environ["STUDIO_WORKER_KEY"]
 PASSWORD = os.environ["STUDIO_PASSWORD"]
 SESSION_KEY = os.environ["STUDIO_SESSION_KEY"].encode()
@@ -115,6 +116,18 @@ def write_jobs(jobs: dict) -> None:
     tmp.replace(JOBS)
 
 
+def touch_worker() -> None:
+    WORKER.write_text(json.dumps({"last_seen": time.time()}), encoding="utf-8")
+
+
+def worker_online() -> bool:
+    try:
+        last_seen = float(json.loads(WORKER.read_text(encoding="utf-8"))["last_seen"])
+    except (FileNotFoundError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return False
+    return time.time() - last_seen <= 90
+
+
 def housekeeping(jobs: dict) -> None:
     now = time.time()
     for job_id, job in list(jobs.items()):
@@ -172,7 +185,10 @@ def list_jobs():
         jobs = read_jobs()
         housekeeping(jobs)
         write_jobs(jobs)
-        return {"jobs": sorted(jobs.values(), key=lambda j: j["created_at"], reverse=True)[:30]}
+        return {
+            "jobs": sorted(jobs.values(), key=lambda j: j["created_at"], reverse=True)[:30],
+            "worker_online": worker_online(),
+        }
 
 
 @app.get("/api/jobs/{job_id}")
@@ -222,6 +238,7 @@ async def worker_action(request: Request, action: str, x_worker_key: str | None 
         jobs = read_jobs()
         housekeeping(jobs)
         if action == "m1_next":
+            touch_worker()
             candidate = next((job for job in sorted(jobs.values(), key=lambda j: j["created_at"]) if job["status"] == "queued"), None)
             if candidate:
                 candidate["status"] = "processing"

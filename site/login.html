@@ -9,6 +9,7 @@
   form{background:#1a201a;border:1px solid #394639;border-radius:20px;padding:25px}label{display:block;color:#bdc7ba;font-size:13px;font-weight:650;margin:0 0 8px}
   input{width:100%;height:46px;padding:0 13px;margin:0 0 18px;color:#f2f2ec;background:#111611;border:1px solid #435044;border-radius:11px;font:inherit;outline:none}input:focus{border-color:#a8cf9d;box-shadow:0 0 0 3px #a8cf9d22}
   button{width:100%;border:0;border-radius:11px;background:#bbeca8;color:#152317;padding:14px;font:700 15px inherit;cursor:pointer}button:hover{background:#d1ffbf}.error{color:#f3a8a5;margin:0 0 14px;display:none}
-</style></head><body><main><div class="brand">Model / 01</div><h1>Вход в студию</h1><p>Введите логин и пароль, чтобы запустить генерацию на Mac.</p>
+</style></head><body><main><div class="brand">Model / 01</div><h1>Вход в студию</h1>
+<p>Введите логин и пароль. Очередь на сервере, генерация — на Mac.</p>
 <form method="post" action="/login"><div class="error" id="error">Неверный логин или пароль.</div><label for="username">Логин</label><input id="username" name="username" autocomplete="username" required value="studio"><label for="password">Пароль</label><input id="password" name="password" type="password" autocomplete="current-password" required><button type="submit">Войти →</button></form></main>
 <script>if(new URLSearchParams(location.search).has('error'))document.querySelector('#error').style.display='block';</script></body></html>

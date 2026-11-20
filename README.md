@@ -14,6 +14,6 @@ Use independent randomly generated values of at least 24 characters. For example
 
 Connect the service to your reverse proxy and route your HTTPS domain to container port `8080`. For Caddy Docker Proxy, select `compose.override.yaml` as the override and set `STUDIO_DOMAIN` and `STUDIO_PROXY_NETWORK`. The base Compose file publishes no host port. Run one server replica and keep the `studio-data` volume across deployments.
 
-On the Mac, set the worker endpoint to `https://YOUR_STUDIO_DOMAIN/backend.php` and set its `worker_key` to the same value as `STUDIO_WORKER_KEY`. Start the existing worker. The dashboard stays online while the worker is offline. Queued jobs expire after 45 minutes.
+On the Mac, set the worker endpoint to `https://YOUR_STUDIO_DOMAIN/backend.php` and set its `worker_key` to the same value as `STUDIO_WORKER_KEY`. Start the existing worker with `Запустить исполнителя.command`. Do not run the local site or tunnel. The dashboard stays online while the worker is offline; the header shows whether the Mac worker has polled in the last 90 seconds. Queued jobs expire after 45 minutes.
 
 See [the worker protocol](site/MODEL1_SITE_SPEC.md) for the API.
